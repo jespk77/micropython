@@ -217,6 +217,11 @@ STATIC mp_obj_t get_wlan(size_t n_args, const mp_obj_t *args) {
         ESP_LOGD("modnetwork", "Initializing WiFi");
         ESP_EXCEPTIONS( esp_wifi_init(&cfg) );
         ESP_EXCEPTIONS( esp_wifi_set_storage(WIFI_STORAGE_RAM) );
+
+        //Setting wifi power saving type
+        wifi_ps_type_t ps_type = (n_args > 1)? mp_obj_get_int(args[1]): WIFI_PS_MIN_MODEM;
+        ESP_EXCEPTIONS( esp_wifi_set_ps(ps_type) );
+
         ESP_LOGD("modnetwork", "Initialized");
         initialized = 1;
     }
@@ -230,7 +235,7 @@ STATIC mp_obj_t get_wlan(size_t n_args, const mp_obj_t *args) {
         mp_raise_ValueError("invalid WLAN interface identifier");
     }
 }
-STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(get_wlan_obj, 0, 1, get_wlan);
+STATIC MP_DEFINE_CONST_FUN_OBJ_VAR_BETWEEN(get_wlan_obj, 0, 2, get_wlan);
 
 STATIC mp_obj_t esp_initialize() {
     static int initialized = 0;
@@ -682,6 +687,10 @@ STATIC const mp_rom_map_elem_t mp_module_network_globals_table[] = {
 #if MODNETWORK_INCLUDE_CONSTANTS
     { MP_ROM_QSTR(MP_QSTR_STA_IF), MP_ROM_INT(WIFI_IF_STA)},
     { MP_ROM_QSTR(MP_QSTR_AP_IF), MP_ROM_INT(WIFI_IF_AP)},
+
+    { MP_ROM_QSTR(MP_QSTR_PS_NONE), MP_ROM_INT(WIFI_PS_NONE)},
+    { MP_ROM_QSTR(MP_QSTR_PS_MIN_MODEM), MP_ROM_INT(WIFI_PS_MIN_MODEM)},
+    { MP_ROM_QSTR(MP_QSTR_PS_MAX_MODEM), MP_ROM_INT(WIFI_PS_MAX_MODEM)},
 
     { MP_ROM_QSTR(MP_QSTR_MODE_11B), MP_ROM_INT(WIFI_PROTOCOL_11B) },
     { MP_ROM_QSTR(MP_QSTR_MODE_11G), MP_ROM_INT(WIFI_PROTOCOL_11G) },
