@@ -219,6 +219,7 @@ STATIC mp_obj_t get_wlan(size_t n_args, const mp_obj_t *args) {
         ESP_EXCEPTIONS( esp_wifi_set_storage(WIFI_STORAGE_RAM) );
 
         //Setting wifi power saving type
+        ESP_LOGD("modnetwork", "Setting WiFi power saving type")
         wifi_ps_type_t ps_type = (n_args > 1)? mp_obj_get_int(args[1]): WIFI_PS_MIN_MODEM;
         ESP_EXCEPTIONS( esp_wifi_set_ps(ps_type) );
 
